@@ -12,15 +12,9 @@ password: {
     type: String, 
     required: true, 
     trim:true
-    },
+    }
 
 },{timeStamp:true})
-
-
-
-
-
-
 
 
 module.exports = mongoose.model("user",userSchema)
