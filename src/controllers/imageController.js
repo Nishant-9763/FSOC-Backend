@@ -1,4 +1,5 @@
 const imageModel = require("../models/imageModel")
+const mongoose = require("mongoose")
 const { Configuration, OpenAIApi } = require("openai");
 const cloudinary = require('cloudinary').v2;
 
@@ -7,9 +8,9 @@ const cloudinary = require('cloudinary').v2;
 
   // Configuration  of "Cloudinary" //
   cloudinary.config({
-      cloud_name: "ddraawvgd",
-      api_key: "994722389161267",
-      api_secret: "aMWYV3cdQ0UkSqZAfM8ec98OPto"
+      cloud_name: process.env.CLOUD_NAME,
+      api_key: process.env.API_KEY,
+      api_secret: process.env.API_SECRET
     });
 
 
@@ -25,6 +26,7 @@ const cloudinary = require('cloudinary').v2;
   const generateImage = async function(req,res){
     try {
 
+        const {userId} = req.params
         const {prompt} = req.body
 // taking prompt from user and convert that into image using "openai.createImage" //
         const aiResponse = await openai.createImage({
@@ -44,7 +46,7 @@ const cloudinary = require('cloudinary').v2;
 
        
  // storing data into PostModel //     
-       let postDetails = {prompt,imageUrl:secure_url}   
+       let postDetails = {userId,prompt,imageUrl:secure_url}   
        let finalData = await imageModel.create(postDetails)
        
 
@@ -60,9 +62,20 @@ const cloudinary = require('cloudinary').v2;
 
 
   const getAllImage = async function(req,res){
-    const {} = req.params
-    const finalData = await imageModel.find()
+    const {userId} = req.params
+    const finalData = await imageModel.find({userId:userId,isDeleted:false})
     return res.send({status:true,data:finalData})
     }
 
-  module.exports = {generateImage,getAllImage}
+
+  const deleteImage = async function(req,res){
+    const {userId,imageId} = req.params
+    if(!mongoose.isValidObjectId(userId))return res.send("userId is not valid")
+    if(!mongoose.isValidObjectId(imageId))return res.send("imageId is not valid")
+
+    const finalData = await imageModel.findOneAndUpdate({_id:imageId,userId:userId,isDeleted:false},{isDeleted:true},{new:true})
+    if(!finalData) return res.send("Image already deleted or not created yet")
+    return res.send({status:true,data:finalData})
+  }
+
+  module.exports = {generateImage,getAllImage,deleteImage}

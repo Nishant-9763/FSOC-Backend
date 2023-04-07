@@ -10,6 +10,10 @@ const imageSchema = new mongoose.Schema({
     },
     imageUrl:{
         type:String
+    },
+    isDeleted:{
+        type:Boolean,
+        default:false
     }
 },{timeseries:true})
 
