@@ -18,7 +18,7 @@ const createUser = async (req, res) => {
     if (Object.keys(data).length === 0)
       return res.status(400).send({ message: "plz provide user's data" });
 
-    let { email, password } = data;
+    let { name,phone_number,email, password } = data;
 
     // if (Object.keys(rest).length > 0) return res.status(400).send({ message: "Invalid field data" });
     ///------------------------- Validation------------------------------------------
@@ -52,7 +52,7 @@ const createUser = async (req, res) => {
 
     let bcryptPass = await bcrypt.hash(password, 10);
 
-    let userData = { email, password: bcryptPass };
+    let userData = { email, password: bcryptPass,name,phone_number };
 
     let createUser = await createData(userData); //*** */
 

@@ -26,7 +26,7 @@ const cloudinary = require('cloudinary').v2;
   const generateImage = async function(req,res){
     try {
 
-        const {userId} = req.params
+     const {userId} = req.params
         const {prompt} = req.body
 // taking prompt from user and convert that into image using "openai.createImage" //
         const aiResponse = await openai.createImage({
@@ -45,8 +45,9 @@ const cloudinary = require('cloudinary').v2;
         const {secure_url} = cloudUrl
 
        
- // storing data into PostModel //     
-       let postDetails = {userId,prompt,imageUrl:secure_url}   
+ // storing data into PostModel //   
+        // console.log(req.decode.userId);
+       let postDetails = {userId:userId,prompt,imageUrl:secure_url}   
        let finalData = await imageModel.create(postDetails)
        
 
@@ -54,7 +55,7 @@ const cloudinary = require('cloudinary').v2;
 
 
     } catch (error) {
-        console.log(error);
+        console.log("error from generateImage",error);
       return  res.status(500).send({status:false,Message:"This request is not available yet",error:error.message})
     }
   }
