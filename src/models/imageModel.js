@@ -9,7 +9,7 @@ const imageSchema = new mongoose.Schema({
         type:String
     },
     imageUrl:{
-        type:String
+        type:[String]
     },
     isDeleted:{
         type:Boolean,
