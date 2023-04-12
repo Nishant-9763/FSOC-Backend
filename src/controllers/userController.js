@@ -22,7 +22,16 @@ const createUser = async (req, res) => {
 
     // if (Object.keys(rest).length > 0) return res.status(400).send({ message: "Invalid field data" });
     ///------------------------- Validation------------------------------------------
-
+    if (!name)
+      return res
+        .status(400)
+        .send({ status: false, message: "nameis mandatory" });
+        if(!name.match(/^[a-z ,.'-]+$/i)) return res.status(400).send({status: false, message: "name is invalid"})
+        if (!phone_number)
+      return res
+        .status(400)
+        .send({ status: false, message: "phone Number is mandatory" });
+        if(!phone_number.match(/^[6-9]\d{9}$/)) return res.status(400).send({status: false, message: "please enter valid indian mobile number" })
     if (!email)
       return res
         .status(400)
@@ -101,13 +110,13 @@ const loginUser = async (req, res) => {
         .status(400)
         .send({ status: false, message: "password is mandatory" });
     // password= password.trim()
-    if (!isvalidpassword(password.trim()))
-      return res
-        .status(400)
-        .send({
-          status: false,
-          message: "password length must be  8 to  15 char",
-        });
+    // if (!isvalidpassword(password.trim()))
+    //   return res
+    //     .status(400)
+    //     .send({
+    //       status: false,
+    //       message: "password length must be  8 to  15 char",
+    //     });
 
     let userPassword = findUser.password;
     let originalPassword = await bcrypt.compare(password, userPassword);
