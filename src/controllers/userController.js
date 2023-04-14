@@ -147,7 +147,4 @@ const loginUser = async (req, res) => {
 module.exports = { createUser, loginUser };
 
 
-const createImage = async function(req,res){
-  const {prompt,size} = req.body
 
-}
